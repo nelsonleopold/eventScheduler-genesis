@@ -83,15 +83,59 @@ function buildDropdown() {
     let dropdownLink = dropdownNode.querySelector("a");
     dropdownLink.setAttribute("data-city", "All");
     dropdownLink.textContent = "All";
-
-
     event.appendChild(dropdownNode);
 
     // add links for unique cities
-    let curEvents = getEvents();
+
     // get our data
+    let curEvents = getEvents();
 
     // filter our data to a unique set
+    // get a distinct array of city names
+    let distinctCities = [...new Set(curEvents.map((event) => event.city))];
+
+    for (let i = 0; i < distinctCities.length; i++) {
+        let ddItem = document.importNode(dropdownTemplate.content, true);
+
+        // add items to the dropdown
+        let ddLink = ddItem.querySelector("a");
+        ddLink.setAttribute("data-city", distinctCities[i]);
+        ddLink.textContent = distinctCities[i];
+        event.appendChild(ddItem)
+    }
+
+    // set the header to default to "Stats for All" on page load
+    let statsHeader = document.getElementById("statsHeader");
+    statsHeader.innerHTML = `Stats for All events`;
+    // show stats for all events on page load
+    displayStats(curEvents);
+}
+
+// this is called every time city name is clicked in the dropdown
+function getEventData(element) {
+    let city = element.getAttribute("data-city");
+
+    // create the stats for the clicked city
+    let curEvents = getEvents();
+    let filteredEvents = curEvents;
+
+    if (city != 'All') {
+
+        // return an array with only the events for the selected city
+        filteredEvents = curEvents.filter(function (event) {
+            if (event.city == city) {
+                return event;
+            }
+        });
+    }
+
+    // set the header
+    let statsHeader = document.getElementById("statsHeader");
+    statsHeader.innerHTML = `Stats for ${city} events`;
+
+    // call a function to display the stats
+    displayStats(filteredEvents);
+
 }
 
 function getEvents() {
@@ -108,4 +152,39 @@ function getEvents() {
     }
 
     return currentEvents;
+}
+
+// this function displays stats for the selected city
+function displayStats(filteredEvents) {
+
+    let total = 0;
+    let average = 0;
+    let most = 0;
+    let least = -1;
+    let currentAttendance = 0;
+
+    // loop over events grabbing the attendance numbers for each event
+    for (let i = 0; i < filteredEvents.length; i++) {
+        currentAttendance = filteredEvents[i].attendance;
+        total += currentAttendance;
+        if (most < currentAttendance) {
+            most = currentAttendance;
+        }
+        if (least > currentAttendance || least < 0) {
+            least = currentAttendance;
+        }
+    }
+
+    average = total / filteredEvents.length;
+
+    // write values to my page
+    document.getElementById("total").innerHTML = total.toLocaleString();
+    document.getElementById("most").innerHTML = most.toLocaleString();
+    document.getElementById("least").innerHTML = least.toLocaleString();
+    document.getElementById("average").innerHTML = average.toLocaleString(
+        undefined, {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+        }
+    );
 }

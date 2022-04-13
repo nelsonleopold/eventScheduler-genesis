@@ -76,8 +76,29 @@
                             <!-- City Data Goes Here -->
                         </ul>
                     </div>
+                    <table class="table table-striped">
+                        <tr>
+                            <th colspan="2" id="statsHeader">Stats For All Events</th>
+                        </tr>
+                        <tr>
+                            <td>Total Attendance</td>
+                            <td id="total">100</td>
+                        </tr>
+                        <tr>
+                            <td>Average Attendance</td>
+                            <td id="average">100</td>
+                        </tr>
+                        <tr>
+                            <td>Most Attended</td>
+                            <td id="most">100</td>
+                        </tr>
+                        <tr>
+                            <td>Least Attended</td>
+                            <td id="least">100</td>
+                        </tr>
+                    </table>
                 </div>
-                <div class="col-12order-first order-md-2">
+                <div class="col-12 col-md-6 order-first order-md-2">
                     <!-- stick logo here -->
                     <!-- <img src="" class="img-fluid p-2" alt=""> -->
                 </div>
@@ -112,7 +133,7 @@
     </footer>
 
     <template id="dropdown-template">
-        <li><a class="dropdown-item" href="#"></a></li>
+        <li><a class="dropdown-item" onclick="getEventData(this)" href="#"></a></li>
     </template>
 
     <!-- Bootstrap JS -->
