@@ -225,3 +225,45 @@ function displayEventData(curEvents) {
 
 
 }
+
+// save new events to local storage
+function saveEventData() {
+    // get all event data from local storage
+    let curEvents = getEvents();
+
+    // create new event object
+    let eventObj = {
+        event: "name",
+        city: "city",
+        state: "state",
+        attendance: 0,
+        date: "01/01/2000"
+    }
+
+    // get values from form, format them, then populate object
+    // get the values from the new event form
+    eventObj.event = document.getElementById("newEventName").value;
+    eventObj.city = document.getElementById("newEventCity").value;
+
+    // get values from the select dropdown (state array)
+    let stateSel = document.getElementById("newEventState");
+    eventObj.state = stateSel.options[stateSel.selectedIndex].text;
+
+    // turn the attendance input into a number
+    let attendanceNbr = parseInt(document.getElementById("newEventAttendance").value, 10);
+    eventObj.attendance = attendanceNbr;
+
+    // get the event data from the form
+    let eventDate = document.getElementById("newEventDate").value;
+    // format the date data from the form
+    let eventDateFormatted = `${eventDate} 00:00`;
+    eventObj.date = new Date(eventDateFormatted).toLocaleDateString();
+
+    // add object to array
+    curEvents.push(eventObj);
+    // save new array to local storage
+    localStorage.setItem("eventData", JSON.stringify(curEvents));
+
+    // call buildDropdown to update/refresh page
+    buildDropdown();
+}
