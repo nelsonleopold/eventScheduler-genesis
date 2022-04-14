@@ -107,8 +107,12 @@ function buildDropdown() {
     // set the header to default to "Stats for All" on page load
     let statsHeader = document.getElementById("statsHeader");
     statsHeader.innerHTML = `Stats for All events`;
+
     // show stats for all events on page load
     displayStats(curEvents);
+
+    // show data for all events
+    displayEventData(curEvents);
 }
 
 // this is called every time city name is clicked in the dropdown
@@ -141,10 +145,11 @@ function getEventData(element) {
 // pull the events from local storage or the default array events
 function getEvents() {
 
-    // get what is in local storage
+    // get "eventData" from local storage
     let currentEvents = JSON.parse(localStorage.getItem("eventData"));
 
-    // if nothing has been stored in local storage then do some stuff
+    // if nothing has been stored in local storage then grab our data 
+    // (array of objects) and set local storage
     if (currentEvents === null) {
         // grab our global array of objects
         currentEvents = events;
@@ -184,8 +189,39 @@ function displayStats(filteredEvents) {
     document.getElementById("least").innerHTML = least.toLocaleString();
     document.getElementById("average").innerHTML = average.toLocaleString(
         undefined, {
-            minimumFractionDigits: 0,
+            // minimumFractionDigits: 0, this isn't needed
             maximumFractionDigits: 0,
         }
     );
+}
+
+// this function displays all of the event data in a table using a template
+function displayEventData(curEvents) {
+    // get a hook into the template
+    let template = document.getElementById("eventData-template");
+    // get a hook into the table body
+    let eventBody = document.getElementById("eventBody");
+    // clear out previous data
+    eventBody.innerHTML = "";
+
+    // loop over objects in curEvents array and write a row
+    // for each event to the eventBody
+    for (let i = 0; i < curEvents.length; i++) {
+        // grab all the nodes from the template (eventData-template), including
+        // child nodes (true)
+        let eventRow = document.importNode(template.content, true);
+
+        // grab only and all the columns from the template
+        let eventCols = eventRow.querySelectorAll("td");
+
+        eventCols[0].textContent = curEvents[i].event;
+        eventCols[1].textContent = curEvents[i].city;
+        eventCols[2].textContent = curEvents[i].state;
+        eventCols[3].textContent = curEvents[i].attendance;
+        eventCols[4].textContent = curEvents[i] = new Date(curEvents[i].date).toLocaleDateString();
+
+        eventBody.appendChild(eventRow);
+    }
+
+
 }
