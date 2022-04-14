@@ -64,7 +64,7 @@ const events = [{
     },
 ];
 
-// builds a unique list of cities for the dropdown menu
+// builds a unique list of cities for the dropdown menu on page load
 function buildDropdown() {
 
     // grab the element we need
@@ -138,6 +138,7 @@ function getEventData(element) {
 
 }
 
+// pull the events from local storage or the default array events
 function getEvents() {
 
     // get what is in local storage
